@@ -25,6 +25,19 @@
               "replace": "apps/api/src/environments/environment.ts",
               "with": "apps/api/src/environments/environment.prod.ts"
             }
+          ],
+          "externalDependencies": [
+            "@nestjs/microservices",
+            "@nestjs/microservices/microservices-module",
+            "@nestjs/websockets/socket-module",
+            "class-transformer",
+            "class-validator",
+            "cache-manager",
+            "cache-manager/package.json"
+          ],
+          "assets": [
+            "apps/api/src/assets",
+            { "glob": "Dockerfile", "input": "apps/api", "output": "." }
           ]
         }
       }
@@ -54,7 +67,20 @@
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
       }
-    }
+    },
+
+      "deploy": {
+        "executor": "@bg-hoard/internal-plugin:heroku-deploy",
+        "outputs": [],
+        "options": {
+          "distLocation": "dist/apps/api",
+          "herokuAppName": "dave-api-3857"
+        },
+        "dependsOn": [
+          { "target": "build", "projects": "self", "params": "forward" }
+        ]
+      }
+
   },
   "tags": ["scope:api", "type:app"]
 }

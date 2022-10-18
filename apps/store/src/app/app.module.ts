@@ -8,6 +8,7 @@ import { appRoutes } from './app.routes';
 import { MatCardModule } from '@angular/material/card';
 import { StoreUiSharedModule } from '@bg-hoard/store/ui-shared';
 import { HttpClientModule } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent],
@@ -18,7 +19,10 @@ import { HttpClientModule } from '@angular/common/http';
     StoreUiSharedModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [{
+    provide: 'baseUrl',
+    useValue: environment.apiUrl
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

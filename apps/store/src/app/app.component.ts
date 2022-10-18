@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { getAllGames } from '../fake-api';
 import { formatRating } from '@bg-hoard/store/util-formatters';
 import { HttpClient } from '@angular/common/http';
@@ -12,8 +12,8 @@ import { Game } from '@bg-hoard/util-interface';
 export class AppComponent {
   formatRating = formatRating;
   title = 'Board Game Hoard';
-  games = this.http.get<Game[]>('/api/games');
-  constructor(private http: HttpClient) {
+  games = this.http.get<Game[]>(`${this.baseUrl}/api/games`);
+  constructor(private http: HttpClient, @Inject('baseUrl') private baseUrl: string) {
     console.log('we need to go faster');
   }
 }
