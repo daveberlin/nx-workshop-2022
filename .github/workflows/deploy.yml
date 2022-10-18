@@ -1,0 +1,21 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SURGE_DOMAIN_STORE: ${{ secrets.SURGE_DOMAIN_STORE }}
+  SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Deploying apps
+    steps:
+     - run: npx nx run api:build:production
+     - run: npx nx run api:deploy
+     - run: npx nx run store:build:production
+     - run: npx nx run store:deploy

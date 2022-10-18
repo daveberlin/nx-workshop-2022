@@ -11,7 +11,7 @@ import { Game } from '@bg-hoard/util-interface';
 })
 export class AppComponent {
   formatRating = formatRating;
-  title = 'Board Game Hoard';
+  title = `Dave's board games`;
   games = this.http.get<Game[]>(`${this.baseUrl}/api/games`);
   constructor(private http: HttpClient, @Inject('baseUrl') private baseUrl: string) {
     console.log('we need to go faster');
