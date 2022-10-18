@@ -20,6 +20,34 @@ interface NormalizedSchema extends UpdateScopeSchemaGeneratorSchema {
   parsedTags: string[];
 }
 
+export default async function (
+  tree: Tree,
+  options: UpdateScopeSchemaGeneratorSchema
+) {
+  // get the scopes
+  const projects = getProjects(tree);
+  const scopes = getScopes(projects);
+  console.log(scopes);
+
+  // update the schema definitions
+  updateSchemaInterface(tree, scopes);
+
+  // update the schema.json
+  updateJson(tree, 'libs/internal-plugin/src/generators/util-lib/schema.json', (schemaJson) => {
+    schemaJson.properties.directory['x-prompt'].items = scopes.map(scope => {
+      return {
+        "value": scope,
+        "label": scope
+      };
+    })
+    return schemaJson;
+  });
+
+  // format files
+  await formatFiles(tree);
+}
+
+
 function normalizeOptions(
   tree: Tree,
   options: UpdateScopeSchemaGeneratorSchema
@@ -81,32 +109,8 @@ function updateSchemaInterface(tree: Tree, scopes: string[]) {
   const newContent = `export interface UtilLibGeneratorSchema {
     name: string;
     directory: ${joinScopes};
+    tags: string;
   }`;
   tree.write(interfaceDefinitionFilePath, newContent);
 }
 
-export default async function (
-  tree: Tree,
-  options: UpdateScopeSchemaGeneratorSchema
-) {
-  const projects = getProjects(tree);
-  const scopes = getScopes(projects);
-  console.log(scopes);
-  updateSchemaInterface(tree, scopes);
-  updateJson(tree, 'libs/internal-plugin/src/generators/util-lib/schema.json', (schemaJson) => {
-    schemaJson.properties.directory.items = scopes.map(scope => {
-      return {
-        "value": scope,
-        "label": scope
-      };
-    })
-    return schemaJson;
-  });
-  await formatFiles(tree);
-
-
-  // await updateJson(tree, 'nx.json', (nxJson) => {
-  //   nxJson.defaultProject = 'api';
-  //   return nxJson;
-  // });
-}
