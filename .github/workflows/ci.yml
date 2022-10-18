@@ -11,5 +11,5 @@ jobs:
         with:
           fetch-depth: 0
 #      - uses: bahmutov/npm-install@v1 # trigger an `npm install`
-      - run: npx npm ci --legacy-peer-deps
+      - run: npm i --legacy-peer-deps
       - run: npx nx affected:test --base=origin/main # test the "store" project
