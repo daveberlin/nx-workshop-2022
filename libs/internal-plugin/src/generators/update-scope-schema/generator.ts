@@ -2,9 +2,11 @@ import {
   addProjectConfiguration,
   formatFiles,
   generateFiles,
+  getProjects,
   getWorkspaceLayout,
   names,
   offsetFromRoot,
+  ProjectConfiguration,
   Tree,
   updateJson,
 } from '@nrwl/devkit';
@@ -56,12 +58,55 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
   );
 }
 
+function getScopes(projectMap: Map<string, ProjectConfiguration>) {
+  const projects: any[] = Array.from(projectMap.values());
+  const allScopes: string[] = projects
+    .map((project) =>
+      project.tags
+        // take only those that point to scope
+        .filter((tag: string) => tag.startsWith('scope:'))
+    )
+    // flatten the array
+    .reduce((acc, tags) => [...acc, ...tags], [])
+    // remove prefix `scope:`
+    .map((scope: string) => scope.slice(6));
+  // remove duplicates
+  return Array.from(new Set(allScopes));
+}
+
+function updateSchemaInterface(tree: Tree, scopes: string[]) {
+  const joinScopes = scopes.map((s) => `'${s}'`).join(' | ');
+  const interfaceDefinitionFilePath =
+    'libs/internal-plugin/src/generators/util-lib/schema.d.ts';
+  const newContent = `export interface UtilLibGeneratorSchema {
+    name: string;
+    directory: ${joinScopes};
+  }`;
+  tree.write(interfaceDefinitionFilePath, newContent);
+}
+
 export default async function (
   tree: Tree,
   options: UpdateScopeSchemaGeneratorSchema
 ) {
-  await updateJson(tree, 'nx.json', (nxJson) => {
-    nxJson.defaultProject = 'api';
-    return nxJson;
+  const projects = getProjects(tree);
+  const scopes = getScopes(projects);
+  console.log(scopes);
+  updateSchemaInterface(tree, scopes);
+  updateJson(tree, 'libs/internal-plugin/src/generators/util-lib/schema.json', (schemaJson) => {
+    schemaJson.properties.directory.items = scopes.map(scope => {
+      return {
+        "value": scope,
+        "label": scope
+      };
+    })
+    return schemaJson;
   });
+  await formatFiles(tree);
+
+
+  // await updateJson(tree, 'nx.json', (nxJson) => {
+  //   nxJson.defaultProject = 'api';
+  //   return nxJson;
+  // });
 }
