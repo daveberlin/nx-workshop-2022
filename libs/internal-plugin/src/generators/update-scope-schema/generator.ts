@@ -43,6 +43,15 @@ export default async function (
     return schemaJson;
   });
 
+  // check for projects without scopes
+  console.log(projects);
+  for (const [key, value] of projects.entries()) {
+    console.log(key);
+    console.log(value);
+    console.log('---');
+    console.log('TAGS ARE ', value['tags']);
+  }
+
   // format files
   await formatFiles(tree);
 }
