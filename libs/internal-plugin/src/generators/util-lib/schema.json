@@ -38,6 +38,10 @@
           {
             "value": "shared",
             "label": "shared"
+          },
+          {
+            "value": "videos",
+            "label": "videos"
           }
         ]
       }
