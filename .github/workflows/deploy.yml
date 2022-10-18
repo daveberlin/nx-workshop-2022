@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploying apps
     steps:
-     - run: npx nx run api:build:production
-     - run: npx nx run api:deploy
-     - run: npx nx run store:build:production
-     - run: npx nx run store:deploy
+      - uses: actions/checkout@v3 # checkout whatever branch the PR is using
+        with:
+          fetch-depth: 0
+      - run: npm i --legacy-peer-deps
+      - run: npx nx run api:build:production
+      - run: npx nx run api:deploy
+      - run: npx nx run store:build:production
+      - run: npx nx run store:deploy
