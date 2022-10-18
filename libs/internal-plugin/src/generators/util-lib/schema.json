@@ -22,7 +22,25 @@
     "directory": {
       "type": "string",
       "description": "A directory where the project is placed",
-      "alias": "d"
+      "alias": "d",
+      "x-prompt": {
+        "message": "Which directory would you like to use?",
+        "type": "list",
+        "items": [
+          {
+            "value": "store",
+            "label": "store"
+          },
+          {
+            "value": "api",
+            "label": "api"
+          },
+          {
+            "value": "shared",
+            "label": "shared"
+          }
+        ]
+      }
     }
   },
   "required": ["name"]
