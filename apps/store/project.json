@@ -95,7 +95,9 @@
       "options": {
         "command": " yarn surge dist/apps/store ${SURGE_DOMAIN_STORE} --token ${SURGE_TOKEN}"
       },
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        { "target": "build", "projects": "self" }
+      ]
     }
   },
   "tags": ["scope:store", "type:app"]
