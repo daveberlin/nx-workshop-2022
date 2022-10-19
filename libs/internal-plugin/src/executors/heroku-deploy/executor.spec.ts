@@ -1,7 +1,10 @@
 import { HerokuDeployExecutorSchema } from './schema';
 import executor from './executor';
 
-const options: HerokuDeployExecutorSchema = {};
+const options: HerokuDeployExecutorSchema = {
+  distLocation: '',
+  herokuAppName: ''
+};
 
 describe('HerokuDeploy Executor', () => {
   it('can run', async () => {

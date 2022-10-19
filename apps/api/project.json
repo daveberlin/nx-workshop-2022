@@ -40,7 +40,8 @@
             { "glob": "Dockerfile", "input": "apps/api", "output": "." }
           ]
         }
-      }
+      },
+      "defaultConfiguration": "production"
     },
     "serve": {
       "executor": "@nrwl/js:node",

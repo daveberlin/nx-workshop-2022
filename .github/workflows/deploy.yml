@@ -19,5 +19,4 @@ jobs:
         with:
           fetch-depth: 0
       - run: npm i --legacy-peer-deps
-      - run: npx nx run api:deploy:production
-      - run: npx nx run store:deploy:production
+      - run: npx nx affected --target=deploy --base=HEAD~1 --parallel
